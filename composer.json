@@ -1,0 +1,20 @@
+{
+  "name": "cheerios/dumpsterfire-base",
+  "description": "Base for Dumpsterfire SDK",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Cheerios4316"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "DumpsterfireBase\\": "src/"
+    },
+    "classmap": [
+      "src/"
+    ]
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
