@@ -7,9 +7,14 @@ use DumpsterfireBase\Interfaces\InitActionInterface;
 
 class DotEnvInit implements InitActionInterface
 {
+    private static bool $ran = false;
     public function run(): void
     {
-        $dotenv = Dotenv::createImmutable(__DIR__);
-        $dotenv->load();
+        if (!self::$ran) {
+            $dotenv = Dotenv::createImmutable('/var/www/html');
+            $dotenv->load();
+
+            self::$ran = true;
+        }
     }
 }

@@ -8,11 +8,14 @@ use DumpsterfireBase\InitActions\WhoopsInit;
 use DumpsterfireComponents\Component;
 use DumpsterfireComponents\PageTemplate\PageTemplate;
 use DumpsterfireRouter\Interfaces\RouterInterface;
+use DumpsterfireBase\Interfaces\InitActionInterface;
 
 class App
 {
+    /** @var class-string<InitActionInterface>[] $initActions */
     protected array $initActions = [];
 
+    /** @var class-string<InitActionInterface>[] $defaultInitActions */
     protected array $defaultInitActions = [
         DotEnvInit::class,
         WhoopsInit::class,
@@ -35,6 +38,17 @@ class App
         if($this->router) {
             $controller = $this->router->getControllerFromRoute($requestUri);
             $controller->getPage()->render();
+        }
+
+        return $this;
+    }
+
+    public function runInitActions(): self
+    {
+        foreach($this->initActions as $action) {
+
+            $action = Container::getInstance()->create($action);
+            $action->run();
         }
 
         return $this;
@@ -76,8 +90,14 @@ class App
         return $this->defaultInitActions;
     }
 
+    public function useDefaultInitActions(): self
+    {
+        $this->setInitActions($this->getDefaultInitActions());
+        return $this;
+    }
+
     public static function new(): self
     {
-        return Container::getInstance()->create(self::class);
+        return Container::getInstance()->create(self::class)->useDefaultInitActions();
     }
 }
