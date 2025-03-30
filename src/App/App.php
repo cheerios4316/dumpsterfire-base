@@ -5,12 +5,15 @@ namespace DumpsterfireBase\App;
 use DumpsterfireBase\Container\Container;
 use DumpsterfireBase\InitActions\DotEnvInit;
 use DumpsterfireBase\InitActions\WhoopsInit;
+use DumpsterfireBase\Interfaces\LoggerInterface;
+use DumpsterfireComponents\AssetsManager\DefaultDependencies;
 use DumpsterfireComponents\Component;
 use DumpsterfireComponents\PageTemplate\PageTemplate;
 use DumpsterfireRouter\Interfaces\RouterInterface;
 use DumpsterfireBase\Interfaces\InitActionInterface;
+use Src\Interfaces\ILoggable;
 
-class App
+class App implements ILoggable
 {
     /** @var class-string<InitActionInterface>[] $initActions */
     protected array $initActions = [];
@@ -51,6 +54,12 @@ class App
             $action->run();
         }
 
+        return $this;
+    }
+
+    public function setLogger(LoggerInterface $logger): self
+    {
+        DefaultDependencies::setLogger($logger);
         return $this;
     }
 

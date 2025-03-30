@@ -2,7 +2,9 @@
 
 namespace DumpsterfireBase\Container;
 use DumpsterfireBase\Interfaces\SingletonInterface;
+use DumpsterfireComponents\AssetsManager\DefaultDependencies;
 use ReflectionClass;
+use Src\Interfaces\ILoggable;
 
 /**
  * @template T
@@ -36,6 +38,12 @@ class Container implements SingletonInterface
             $deps = $this->dependencyResolver->resolve($reflection);
 
             $instance = $reflection->newInstanceArgs($deps);
+
+            if(is_subclass_of($class, ILoggable::class)) {
+                if($logger = DefaultDependencies::getLogger()) {
+                    $instance->setLogger($logger);
+                }
+            }
 
             return $instance;
         } catch (\Exception $e) {
